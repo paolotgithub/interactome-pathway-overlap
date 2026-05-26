@@ -1,0 +1,1 @@
+This repository provides the materials used and described in the manuscript "Interactome-pathway overlap: a quantitative, data-driven analysis of protein interaction networks and pathway membership annotations".
