@@ -2,14 +2,16 @@
 11_protein_classification.py
 -----------------------------
 Classifies promiscuous proteins into a five-class taxonomy using UMAP
-embedding followed by HDBSCAN clustering.
+embedding followed by HDBSCAN clustering, with k-means fallback if HDBSCAN
+finds fewer than five clusters.
 
 Pipeline:
   1. Build a 7-feature matrix per protein (see below)
   2. Log-transform skewed features, RobustScaler normalisation
   3. UMAP to 10D (for clustering) and 2D (for visualisation)
   4. HDBSCAN on the 10D embedding (min_cluster_size=80)
-  5. Greedy taxonomy label assignment from cluster centroids
+  5. K-means fallback on the 10D embedding if HDBSCAN finds <5 clusters
+  6. Greedy taxonomy label assignment from cluster centroids
 
 Feature space (7 features):
   global_degree       total degree in BioGRID (log-transformed)
@@ -18,7 +20,7 @@ Feature space (7 features):
                       weighted by inverse pathway size, range [0,1]
   mean_ratio          mean(local_degree / global_degree) across all pathways
   bridge_score        number of distant cross-PPI pathway pairs (log)
-  betweenness         approximate betweenness centrality (k=500 pivots)
+  betweenness         exact igraph betweenness centrality when provided in features
   cross_ppi_count     PPI partners outside the protein's pathway neighbourhood (log)
 
 Taxonomy labels (greedy assignment from cluster centroids):

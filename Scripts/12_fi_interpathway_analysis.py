@@ -11,7 +11,7 @@ For each FI edge, determines whether it is:
 For inter-pathway FI edges, attaches per-protein topology features:
   local_degree    mean degree within each protein's own pathways
   global_degree   total BioGRID degree
-  betweenness     approximate betweenness centrality
+  betweenness     exact igraph betweenness centrality from protein_classification.tsv
   ratio           mean(local/global degree)
 
 Tests whether topology metrics differ across annotation classes using
@@ -228,7 +228,7 @@ def run(
                 continue
             stat, pval = mannwhitneyu(vals_a, vals_b, alternative="two-sided")
             n1, n2 = len(vals_a), len(vals_b)
-            rbc = 1 - (2 * stat) / (n1 * n2)
+            rbc = (2 * stat) / (n1 * n2) - 1
             mw_results.append({
                 "metric":        metric,
                 "class_a":       cls_a,
